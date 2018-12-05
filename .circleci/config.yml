@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/node:11.2.0-browsers
+      - image: circleci/mongo:4.0.4
+    working_directory: ~/repo
+    steps:
+      - run:
+          name: Wait for Mongo
+          command: dockerize -wait tcp://localhost:27017 -timeout 1m
+      - run:
+          name: Inport data
+          command: echo "Import data"
+      - run:
+          name: export data
+          command: echo "Export data"
+      # - store_artifacts:
+      #     path: /tmp/artifact-1
+      #     destination: artifact-file
