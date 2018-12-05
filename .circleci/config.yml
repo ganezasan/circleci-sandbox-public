@@ -18,3 +18,8 @@ jobs:
       # - store_artifacts:
       #     path: /tmp/artifact-1
       #     destination: artifact-file
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
