@@ -2,7 +2,8 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/node:11.2.0-browsers
+      # - image: circleci/node:11.2.0-browsers
+      - image: circleci/golang:1.9-node
       - image: circleci/mongo:4.0.4
     working_directory: ~/repo
     steps:
@@ -10,11 +11,14 @@ jobs:
           name: Wait for Mongo
           command: dockerize -wait tcp://localhost:27017 -timeout 1m
       - run:
-          name: Inport data
-          command: echo "Import data"
-      - run:
-          name: export data
-          command: echo "Export data"
+          name: Install mongo circleci
+          command: sudo apt-get install mongodb-clients
+      # - run:
+      #     name: Inport data
+      #     command: mongoimport --host localhost:27017 --db new_db --collection products --file products.json
+      # - run:
+      #     name: export data
+      #     command: mongoexport --host localhost:27017 --db new_db --collection products --out new_products.json
       # - store_artifacts:
       #     path: /tmp/artifact-1
       #     destination: artifact-file
