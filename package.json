@@ -29,5 +29,8 @@
       "node_modules",
       "src"
     ]
+  },
+  "dependencies": {
+    "axios": "^0.18.0"
   }
 }
