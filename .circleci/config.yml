@@ -1,42 +1,9 @@
-version: 2
-jobs:
-  test:
-    docker:
-      - image: circleci/node:11.2.0-browsers
-      - image: circleci/mongo:3.6
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run:
-          name: Install yarn package
-          command: yarn install
-      - run:
-          name: Wait for Mongo
-          command: dockerize -wait tcp://localhost:27017 -timeout 1m
-      - run:
-          name: Install mongo circleci
-          command: sudo apt-get install mongodb-clients
-      - run:
-          name: Import json file
-          command: wget https://raw.githubusercontent.com/ozlerhakan/mongodb-json-files/master/datasets/products.json
-      - run:
-          name: Inport data
-          command: mongoimport --host localhost:27017 --db new_db --collection products --file products.json
-      - run:
-          name: Run mongo test
-          command: yarn run test
-          environment:
-            MONGOMS_DISABLE_POSTINSTALL: 1
-      - run:
-          name: export data
-          command: |
-            mkdir output
-            mongoexport --host localhost:27017 --db new_db --collection products --out ./output/new_products.json
-      - store_artifacts:
-          path: output
-          destination: artifact-file
+version: 2.1
+orbs:
+  emoji: a4geru/awesome-emoji@1.0.7
 workflows:
-  version: 2
-  test:
+  build:
     jobs:
-      - test
+      - emoji/echo:
+          emoji: sushi
+          time: 100
