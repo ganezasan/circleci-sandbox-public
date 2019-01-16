@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:latest
+    environment:
+      - LIGHT_GREEN: \033[40m\033[1;32m
+      - NC: \033[0m
+      - SUSHI: \U0001F363
+      - BEER: \U0001F37A
+    steps:
+      - run: |
+          echo "emoji=`echo beer | tr '[:lower:]' '[:upper:]'`;  for i in {1..1000}; do eval 'echo -ne \$$(echo $emoji)'; done" >> echo.sh
+          chmod +x echo.sh
+      - run:
+          name: echo
+          command: |
+            sh ./echo.sh
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
