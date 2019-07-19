@@ -1,93 +1,29 @@
 version: 2
 jobs:
-  "TakayukiIto":
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run: 'echo Hello'
-  "NRI@東京":
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run: 'sleep 1'
-  "アプリケーションエンジニア":
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run: 'sleep 10'
-  "プロジェクトマネジメント":
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run: 'sleep 15'
-  "d3.js(データビジュアライズ)":
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run: 'sleep 20'
-  "Cheekit＠岩手":
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run: 'sleep 1'
-  "起業":
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run: 'sleep 10'
-  "クラウドソーシング":
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run: 'sleep 15'
-  "リモートワーク":
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run: 'sleep 20'
-  "セブ留学3ヶ月":
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run: 'sleep 25'
-  "医療系ベンチャー@東京・岩手":
-    docker:
-      - image: alpine:3.7
-    steps:
-      - run: 'sleep 1'
-
-workflows:
-  version: 2
   build:
-    jobs:
-      - "TakayukiIto"
-      - "NRI@東京":
-          requires:
-            - "TakayukiIto"
-      - "アプリケーションエンジニア":
-          requires:
-            - "TakayukiIto"
-      - "プロジェクトマネジメント":
-          requires:
-            - "TakayukiIto"
-      - "d3.js(データビジュアライズ)":
-          requires:
-            - "TakayukiIto"
-      - "Cheekit＠岩手":
-          requires:
-            - "NRI@東京"
-      - "起業":
-          requires:
-            - "NRI@東京"
-      - "クラウドソーシング":
-          requires:
-            - "NRI@東京"
-      - "リモートワーク":
-          requires:
-            - "NRI@東京"
-      - "セブ留学3ヶ月":
-          requires:
-            - "NRI@東京"
-      - "医療系ベンチャー@東京・岩手":
-          requires:
-            - "Cheekit＠岩手"
+    docker:
+      - image: circleci/python:3.6-jessie-node-browsers
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: remove default nodejs
+          command: |
+            node -v
+            which node
+            sudo rm /usr/local/bin/node
+      - run:
+          name: nvm install and set node version
+          command: |
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+            echo 'export NVM_DIR="$HOME/.nvm"' >> $BASH_ENV
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'  >> $BASH_ENV
+            echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> $BASH_ENV  # This loads nvm bash_completion
+            source $BASH_ENV
+            nvm install 12.1.0
+            nvm alias default 12.1.0
+            node -v
+            which node
+      - run: |
+          node -v
+          which node
