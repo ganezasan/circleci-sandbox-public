@@ -1,0 +1,28 @@
+{
+  "name": "circleci-sandbox-public",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest-junit": {
+    "outputDirectory": "test_results" 
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ganezasan/circleci-sandbox-public.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ganezasan/circleci-sandbox-public/issues"
+  },
+  "homepage": "https://github.com/ganezasan/circleci-sandbox-public#readme",
+  "dependencies": {
+    "jest": "^24.9.0"
+  },
+  "devDependencies": {
+    "jest-junit": "^7.0.0"
+  }
+}
