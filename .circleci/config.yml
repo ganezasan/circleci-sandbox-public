@@ -30,3 +30,11 @@ jobs:
               yarn test $TESTFILES
       - store_test_results:
           path: test_results
+workflows:
+  version: 2
+  workflow:
+    jobs:
+    - build
+    - test:
+        requires:
+          - build
