@@ -1,0 +1,30 @@
+
+version: 2
+jobs:
+  failed-job:
+    docker:
+      - image: circleci/golang:1.11.0
+    steps:
+      - checkout
+      - run: sleep 30
+      - run: exit 1
+  job-1:
+    docker:
+      - image: circleci/golang:1.11.0
+    steps:
+      - checkout
+      - run: sleep 60
+  job-2:
+    docker:
+      - image: circleci/golang:1.11.0
+    steps:
+      - checkout
+      - run: sleep 60
+
+workflows:
+  version: 2
+  auto-cancel-example:
+    jobs:
+      - failed-job
+      - job-1
+      - job-2
