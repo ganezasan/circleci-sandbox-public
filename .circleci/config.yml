@@ -1,25 +1,18 @@
 
 version: 2
 jobs:
-  failed-job:
-    docker:
-      - image: circleci/golang:1.11.0
-    steps:
-      - checkout
-      - run: sleep 30
-      - run: exit 1
   job-1:
     docker:
       - image: circleci/golang:1.11.0
     steps:
       - checkout
-      - run: sleep 60
+      - run: sleep 120
   job-2:
     docker:
       - image: circleci/golang:1.11.0
     steps:
       - checkout
-      - run: sleep 60
+      - run: sleep 160
   auto-cancel:
     docker:
       - image: circleci/golang:1.11.0
@@ -28,13 +21,14 @@ jobs:
       - run:
           name: auto-cancel
           command: |
+            PIPLINE_NUMBER=$(curl -s -H 'Accept: application/json' -X GET https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}?circle-token=${CIRCLECI_TOKEN} | jq .pipeline_id)
             while true; do
-              json=$(curl -s -H 'Accept: application/json' -X GET https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/job?circle-token=${CIRCLECI_TOKEN})
-              is_failed=$(echo $json | jq '.items | any(.status == "failed")')
-              is_pending=$(echo $json | jq '.items | any(.status == "running")')
+              LATEST_PIPLINE_NUMBER=$(curl -X GET https://circleci.com/api/v2/project/github/ganezasan/circleci-sandbox/pipeline?circle-token=$CIRCLECI_TOKEN\&branch=${CIRCLE_BRANCH} | jq .items[0].number)
+              is_pending=$(curl -s -H 'Accept: application/json' -X GET https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/job?circle-token=${CIRCLECI_TOKEN} | jq '.items | map(select(.name != "auto-cancel")) | any(.status == "running")')
 
-              if [ "$is_failed" == "true" ]; then
+              if [ "$LATEST_PIPLINE_NUMBER" != "$PIPLINE_NUMBER" ]; then
                 echo "Cancel workflow"
+                # If you want to stop firebase test lab script, you should add some scripts to stop them.
                 curl -s -H 'Accept: application/json' -X POST https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/cancel?circle-token=${CIRCLECI_TOKEN}
                 exit 0
               elif [ "$is_pending" == "false" ]; then
@@ -50,7 +44,6 @@ workflows:
   version: 2
   auto-cancel-example:
     jobs:
-      - failed-job
       - job-1
       - job-2
       - auto-cancel
