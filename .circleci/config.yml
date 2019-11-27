@@ -24,7 +24,7 @@ jobs:
             PIPLINE_NUMBER=$(curl -s -H 'Accept: application/json' -X GET https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}?circle-token=${CIRCLECI_TOKEN} | jq .pipeline_id)
             echo $PIPLINE_NUMBER
             while true; do
-              LATEST_PIPLINE_NUMBER=$(curl -X GET https://circleci.com/api/v2/project/github/ganezasan/circleci-sandbox/pipeline?circle-token=$CIRCLECI_TOKEN\&branch=${CIRCLE_BRANCH} | jq .items[0].number)
+              LATEST_PIPLINE_NUMBER=$(curl -X GET https://circleci.com/api/v2/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline?circle-token=$CIRCLECI_TOKEN\&branch=${CIRCLE_BRANCH} | jq .items[0].number)
               echo $LATEST_PIPLINE_NUMBER
               is_pending=$(curl -s -H 'Accept: application/json' -X GET https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/job?circle-token=${CIRCLECI_TOKEN} | jq '.items | map(select(.name != "auto-cancel")) | any(.status == "running")')
 
